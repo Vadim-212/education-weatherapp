@@ -25,6 +25,7 @@ class MainActivityPresenter: MainActivityContract.Presenter {
             WeatherAppDatabase::class.java,
             "WeatherAppDatabase")
             .allowMainThreadQueries()
+            .fallbackToDestructiveMigration() // TODO: потеря данных при использовании fallbackToDestructiveMigration
             .build()
     }
 
@@ -43,7 +44,7 @@ class MainActivityPresenter: MainActivityContract.Presenter {
         val dialogBuilder = AlertDialog.Builder(context)
         dialogBuilder.setTitle("Are you sure?").setPositiveButton("Yes") { dialogInterface: DialogInterface, i: Int ->
             cities.remove(city)
-            db.getCityInWeatherListDao().initiateDeleteCityById(city.id)
+            db.getCityInWeatherListDao().initiateDeleteCityByCityId(city.cityId)
             view?.processData(cities)
             view?.initializeUpdateAdapter()
         }.setNegativeButton("No") { dialogInterface: DialogInterface, i: Int -> return@setNegativeButton }.create().show()

@@ -3,6 +3,7 @@ package kz.step.weatherapp.data.api
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiConnection {
@@ -12,6 +13,7 @@ class ApiConnection {
         retrofit = Retrofit.Builder()
             .baseUrl(ApiConstants.baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .client(initializeOkHttpClient())
             .build()
         return retrofit

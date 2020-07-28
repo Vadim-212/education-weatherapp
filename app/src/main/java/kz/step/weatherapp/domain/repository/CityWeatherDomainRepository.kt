@@ -4,5 +4,7 @@ import io.reactivex.Observable
 import kz.step.weatherapp.data.CityWeather
 
 interface CityWeatherDomainRepository {
-    fun initiateGetCityWeather(query: String): Observable<CityWeather>
+    fun initiateGetCityWeatherByQuery(query: String): Observable<CityWeather>
+
+    fun initiateGetCityWeatherById(cityId: Long): Observable<CityWeather>
 }

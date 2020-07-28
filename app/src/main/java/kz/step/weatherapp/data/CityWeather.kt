@@ -33,14 +33,22 @@ class CityWeather {
     @Expose
     var snow: Snow? = null
 
+    @SerializedName("sys")
+    @Expose
+    var sys: Sys? = null
+
     @SerializedName("name")
     @Expose
     var name: String? = null
 
+    @SerializedName("dt")
+    @Expose
+    var dt: Long? = null
+
     override fun toString(): String {
         return "CityWeather(weather='$weather',main='$main'," +
                 "visibility='$visibility',wind='$wind',rain='$rain'," +
-                "clouds='$clouds',snow='$snow',name='$name')"
+                "clouds='$clouds',snow='$snow',dt='$dt',name='$name')"
     }
 
     inner class Clouds {
@@ -67,15 +75,15 @@ class CityWeather {
 
         @SerializedName("temp_max")
         @Expose
-        var tempMax: Int? = null
+        var tempMax: Double? = null
 
         @SerializedName("pressure")
         @Expose
-        var pressure: Int? = null
+        var pressure: Double? = null
 
         @SerializedName("humidity")
         @Expose
-        var humidity: Int? = null
+        var humidity: Double? = null
         override fun toString(): String {
             return "Main(temp='$temp',feelsLike='$feelsLike'," +
                     "tempMin='$tempMin',tempMax='$tempMax',pressure='$pressure'," +
@@ -130,9 +138,36 @@ class CityWeather {
 
         @SerializedName("deg")
         @Expose
-        var deg: Int? = null
+        var deg: Double? = null
         override fun toString(): String {
             return "Wind(speed='$speed',deg='$deg')"
+        }
+    }
+
+    inner class Sys {
+        @SerializedName("type")
+        @Expose
+        var type: Int? = null
+
+        @SerializedName("id")
+        @Expose
+        var id: Long? = null
+
+        @SerializedName("country")
+        @Expose
+        var country: String? = null
+
+        @SerializedName("sunrise")
+        @Expose
+        var sunrise: Long? = null
+
+        @SerializedName("sunset")
+        @Expose
+        var sunset: Long? = null
+
+        override fun toString(): String {
+            return "Sys(type='$type',id='$id'," +
+                    "country='$country',sunrise='$sunrise',sunset='$sunset')"
         }
     }
 }

@@ -14,4 +14,8 @@ class ApiImplementation: ApiInterface {
     override fun cityWeather(q: String, units: String, appid: String): Observable<Response<CityWeather>> {
         return api.cityWeather(q, units, appid)
     }
+
+    override fun cityWeatherById(cityId: Long, units: String, appid: String): Observable<Response<CityWeather>> {
+        return api.cityWeatherById(cityId, units, appid)
+    }
 }

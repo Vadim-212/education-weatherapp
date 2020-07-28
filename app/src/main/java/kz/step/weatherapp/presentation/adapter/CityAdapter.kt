@@ -1,13 +1,24 @@
 package kz.step.weatherapp.presentation.adapter
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_add_city.*
+import kotlinx.android.synthetic.main.fragment_weather.*
 import kz.step.weatherapp.R
 import kz.step.weatherapp.data.City
 import kz.step.weatherapp.data.CityInWeatherList
+import kz.step.weatherapp.data.CityWeather
+import kz.step.weatherapp.domain.usecase.CityWeatherUseCase
 import kz.step.weatherapp.presentation.activity.MainActivity
 import kz.step.weatherapp.presentation.presenter.CityFragmentPresenter
 import kz.step.weatherapp.presentation.viewholder.CityViewHolder
@@ -16,6 +27,7 @@ class CityAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
     var context: Context
     var cities: ArrayList<City>
     var presenter: CityFragmentPresenter
+    var cityWeatherUseCase = CityWeatherUseCase() // TODO: dagger
 
     constructor(context: Context, cities: ArrayList<City>, presenter: CityFragmentPresenter) {
         this.context = context
@@ -34,11 +46,24 @@ class CityAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder.itemView.setOnClickListener {
-            presenter.addCityInWeatherList(CityInWeatherList().apply {
-                name = cities.get(position).name
-                country = cities.get(position).country
-            })
-            (context as MainActivity).supportFragmentManager.popBackStack()
+            if((context as FragmentActivity).progressbar_fragment_add_city.visibility == View.INVISIBLE) {
+                (context as FragmentActivity).progressbar_fragment_add_city.visibility = View.VISIBLE
+                val observable =
+                    CityWeatherUseCase().initiateCreateObservableById(cities.get(position).apiCityId) // TODO: dagger
+                var observer = observable.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({ response ->
+                        run {
+                            presenter.addCityInWeatherList(cityWeatherUseCase.cityWeatherToCityInWeatherList(response))
+                            (context as FragmentActivity).progressbar_fragment_add_city.visibility = View.INVISIBLE
+                            (context as MainActivity).supportFragmentManager.popBackStack()
+                        }
+                    }, { t ->
+                        run {
+                            Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+                        }
+                    })
+            }
         }
 
         (holder as CityViewHolder).initiateBind(cities.get(position).name, cities.get(position).country)

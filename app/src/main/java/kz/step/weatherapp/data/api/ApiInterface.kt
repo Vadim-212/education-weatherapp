@@ -10,4 +10,7 @@ import retrofit2.http.Query
 interface ApiInterface {
     @GET("weather")
     fun cityWeather(@Query("q") q: String, @Query("units") units: String = "metric", @Query("appid") appid: String = ApiConstants.appid): Observable<Response<CityWeather>>
+
+    @GET("weather")
+    fun cityWeatherById(@Query("id") id: Long, @Query("units") units: String = "metric", @Query("appid") appid: String = ApiConstants.appid): Observable<Response<CityWeather>>
 }

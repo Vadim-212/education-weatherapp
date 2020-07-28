@@ -11,4 +11,6 @@ class City {
     var name: String = ""
 
     var country: String = ""
+
+    var apiCityId: Long = 0
 }

@@ -12,8 +12,19 @@ class CityWeatherRepository: CityWeatherDomainRepository {
         apiImplementation = ApiImplementation()
     }
 
-    override fun initiateGetCityWeather(query: String): Observable<CityWeather> {
+    override fun initiateGetCityWeatherByQuery(query: String): Observable<CityWeather> {
         return apiImplementation.cityWeather(query)
+            .map { response ->
+                if(response.isSuccessful) {
+                    response.body()
+                } else {
+                    throw Exception()
+                }
+            }
+    }
+
+    override fun initiateGetCityWeatherById(cityId: Long): Observable<CityWeather> {
+        return apiImplementation.cityWeatherById(cityId)
             .map { response ->
                 if(response.isSuccessful) {
                     response.body()
