@@ -10,23 +10,22 @@ import com.google.android.material.snackbar.Snackbar
 import kz.step.weatherapp.data.City
 import kz.step.weatherapp.data.CityInWeatherList
 import kz.step.weatherapp.data.WeatherAppDatabase
+import kz.step.weatherapp.di.component.DaggerUseCaseComponent
+import kz.step.weatherapp.di.module.UseCaseModule
+import kz.step.weatherapp.domain.usecase.DatabaseUseCase
 import kz.step.weatherapp.presentation.contract.MainActivityContract
+import javax.inject.Inject
 
 class MainActivityPresenter: MainActivityContract.Presenter {
     var context: Context
     var view: MainActivityContract.View? = null
     var cities: ArrayList<CityInWeatherList> = ArrayList()
-    var db: WeatherAppDatabase
+    //var db: WeatherAppDatabase
+    @Inject lateinit var databaseUseCase: DatabaseUseCase
 
     constructor(context: Context) {
         this.context = context
-        db = Room.databaseBuilder(
-            context,
-            WeatherAppDatabase::class.java,
-            "WeatherAppDatabase")
-            .allowMainThreadQueries()
-            .fallbackToDestructiveMigration() // TODO: потеря данных при использовании fallbackToDestructiveMigration
-            .build()
+        DaggerUseCaseComponent.builder().useCaseModule(UseCaseModule(context)).build().inject(this)
     }
 
     override fun initializeData() {
@@ -35,7 +34,7 @@ class MainActivityPresenter: MainActivityContract.Presenter {
 //            name = "London"
 //            country = "UK"
 //        }))
-        cities.addAll(db.getCityInWeatherListDao().initiateGetCities())
+        cities.addAll(databaseUseCase.initiateGetCitiesInWeatherList())
         view?.processData(cities)
         view?.initializeUpdateAdapter()
     }
@@ -44,7 +43,7 @@ class MainActivityPresenter: MainActivityContract.Presenter {
         val dialogBuilder = AlertDialog.Builder(context)
         dialogBuilder.setTitle("Are you sure?").setPositiveButton("Yes") { dialogInterface: DialogInterface, i: Int ->
             cities.remove(city)
-            db.getCityInWeatherListDao().initiateDeleteCityByCityId(city.cityId)
+            databaseUseCase.initiateDeleteCityInWeatherListByCityId(city.cityId)
             view?.processData(cities)
             view?.initializeUpdateAdapter()
         }.setNegativeButton("No") { dialogInterface: DialogInterface, i: Int -> return@setNegativeButton }.create().show()

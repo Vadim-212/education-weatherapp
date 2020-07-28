@@ -57,7 +57,7 @@ class AddCityFragment : Fragment(), CityFragmentContract.View {
     }
 
     override fun initializeAdapter() {
-        adapter = context?.let { CityAdapter(it, cities, presenter!!) }
+        adapter = CityAdapter(requireContext(), cities, presenter!!)
         recyclerview_fragment_add_city.adapter = adapter
     }
 

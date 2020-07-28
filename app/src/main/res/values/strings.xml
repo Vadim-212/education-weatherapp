@@ -6,4 +6,10 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="activity_main_button_add_location">Add location</string>
+    <string name="fragment_add_city_textview_add_city_title">Choose city:</string>
+    <string name="viewholder_city_textview_comma">,</string>
+    <string name="viewholder_city_weather_textview_temperature_degree">°C</string>
+    <string name="viewholder_city_weather_textview_comma">,</string>
+    <string name="viewholder_city_weather_imageview_delete_city_content">Delete</string>
 </resources>

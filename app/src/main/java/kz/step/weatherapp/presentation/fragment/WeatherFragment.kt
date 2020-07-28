@@ -1,7 +1,5 @@
 package kz.step.weatherapp.presentation.fragment
 
-import android.app.AlertDialog
-import android.app.ProgressDialog
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -22,21 +20,24 @@ import kz.step.weatherapp.R
 import kz.step.weatherapp.data.CityInWeatherList
 import kz.step.weatherapp.data.CityWeather
 import kz.step.weatherapp.data.WeatherAppDatabase
-import kz.step.weatherapp.data.api.ApiConnection
+import kz.step.weatherapp.di.component.DaggerUseCaseComponent
+import kz.step.weatherapp.di.module.UseCaseModule
 import kz.step.weatherapp.domain.usecase.CityWeatherUseCase
-import retrofit2.Response
+import kz.step.weatherapp.domain.usecase.DatabaseUseCase
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
 
 class WeatherFragment(var city: CityInWeatherList): Fragment() {
     var rootView: View? = null
     var db: WeatherAppDatabase? = null
     var currentCityLastWeather: CityInWeatherList? = null
-    var cityWeatherUseCase: CityWeatherUseCase = CityWeatherUseCase() // TODO: dagger
+    @Inject lateinit var cityWeatherUseCase: CityWeatherUseCase
+    @Inject lateinit var databaseUseCase: DatabaseUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +56,7 @@ class WeatherFragment(var city: CityInWeatherList): Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initializeDependencies()
         initializeListeners()
 
         db = Room.databaseBuilder(
@@ -82,6 +84,8 @@ class WeatherFragment(var city: CityInWeatherList): Fragment() {
             initializeGetDataFromApi()
         }
 
+
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -95,14 +99,18 @@ class WeatherFragment(var city: CityInWeatherList): Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun onFailure(t: Throwable) {
-        Toast.makeText(context, "An error occurred: getting data from the database. " + t.message, Toast.LENGTH_SHORT).show()
-        initiateViewsFromCityInWeatherList(currentCityLastWeather!!)
+        if(currentCityLastWeather == null) {
+            Toast.makeText(context, "An error occurred: unable to retrieve data.", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "An error occurred: getting data from the database. " + t.message, Toast.LENGTH_SHORT).show()
+            initiateViewsFromCityInWeatherList(currentCityLastWeather!!)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun onResponse(response: CityWeather) {
         // TODO: update weather to db
-        db?.getCityInWeatherListDao()?.initiateUpdateCityWeather(cityWeatherUseCase.cityWeatherToCityInWeatherList(response))
+        //db?.getCityInWeatherListDao()?.initiateUpdateCityWeather(cityWeatherUseCase.cityWeatherToCityInWeatherList(response))
         initiateViewsFromCityWeather(response)
     }
 
@@ -145,5 +153,9 @@ class WeatherFragment(var city: CityInWeatherList): Fragment() {
                 runnable, 500.toLong()
             )
         }
+    }
+
+    fun initializeDependencies() {
+        DaggerUseCaseComponent.builder().useCaseModule(UseCaseModule(context?.applicationContext!!)).build().inject(this)
     }
 }

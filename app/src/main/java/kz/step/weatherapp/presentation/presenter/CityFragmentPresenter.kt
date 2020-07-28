@@ -1,32 +1,33 @@
 package kz.step.weatherapp.presentation.presenter
 
 import android.content.Context
+import android.provider.ContactsContract
 import android.util.Log
 import android.widget.Toast
 import androidx.room.Room
 import kz.step.weatherapp.data.City
 import kz.step.weatherapp.data.CityInWeatherList
 import kz.step.weatherapp.data.WeatherAppDatabase
+import kz.step.weatherapp.di.component.DaggerUseCaseComponent
+import kz.step.weatherapp.di.module.UseCaseModule
+import kz.step.weatherapp.domain.usecase.DatabaseUseCase
 import kz.step.weatherapp.presentation.contract.CityFragmentContract
+import javax.inject.Inject
 
 class CityFragmentPresenter: CityFragmentContract.Presenter {
     var view: CityFragmentContract.View? = null
     var context: Context
     var cities: ArrayList<City> = ArrayList()
-    var db: WeatherAppDatabase
+    //var db: WeatherAppDatabase
+    @Inject lateinit var databaseUseCase: DatabaseUseCase
 
     constructor(context: Context) {
         this.context = context
-        db = Room.databaseBuilder(
-            context,
-            WeatherAppDatabase::class.java,
-            "WeatherAppDatabase")
-            .allowMainThreadQueries()
-            .build()
+        DaggerUseCaseComponent.builder().useCaseModule(UseCaseModule(context)).build().inject(this)
     }
 
     fun initializeCityListOnFirstTime() {
-        val citylist = db.getCityDao().initiateGetCities()
+        val citylist = databaseUseCase.initiateGetCities()
         if(citylist.isNullOrEmpty()) {
             val defaultList = listOf<City>(City().apply { name = "New York"; country = "US"; apiCityId = 5128638 },
                 City().apply { name = "Moscow"; country = "RU"; apiCityId = 524894 },
@@ -44,7 +45,7 @@ class CityFragmentPresenter: CityFragmentContract.Presenter {
                 City().apply { name = "Ottawa"; country = "CA"; apiCityId = 6094817 },
                 City().apply { name = "Mexico"; country = "MX"; apiCityId = 3530597 },
                 City().apply { name = "Brasília"; country = "BR"; apiCityId = 3469058 })
-            db.getCityDao().initiateInsertCities(defaultList)
+            databaseUseCase.initiateInsertCities(defaultList)
         }
     }
 
@@ -62,15 +63,15 @@ class CityFragmentPresenter: CityFragmentContract.Presenter {
 //                name = "Paris"
 //                country = "FR"
 //            }))
-        cities.addAll(db.getCityDao().initiateGetCities().sortedBy { city -> city.name })
+        cities.addAll(databaseUseCase.initiateGetCities().sortedBy { city -> city.name })
         view?.processData(cities)
         view?.initializeUpdateAdapter()
     }
 
     override fun addCityInWeatherList(city: CityInWeatherList) {
-        val cityInDB: CityInWeatherList? = db.getCityInWeatherListDao().initiateGetCityByNameAndCountry(city.name, city.country)
+        val cityInDB: CityInWeatherList? = databaseUseCase.initiateGetCityInWeatherListByCityId(city.cityId)
         if(cityInDB == null) {
-            db.getCityInWeatherListDao().initiateInsertCity(city)
+            databaseUseCase.initiateInsertCityInWeatherList(city)
         } else {
             Toast.makeText(context, "This city is already in list.", Toast.LENGTH_SHORT).show()
         }

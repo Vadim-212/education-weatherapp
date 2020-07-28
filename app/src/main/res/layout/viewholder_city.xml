@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@+id/textview_viewholder_city_city"
         app:layout_constraintTop_toTopOf="parent"
-        android:text=", "
+        android:text="@string/viewholder_city_textview_comma"
         android:layout_marginTop="15dp"/>
 
     <TextView

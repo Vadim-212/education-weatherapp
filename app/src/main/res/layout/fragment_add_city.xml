@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="Choose city:"
+        android:text="@string/fragment_add_city_textview_add_city_title"
         android:background="#fff"/>
 
     <androidx.recyclerview.widget.RecyclerView

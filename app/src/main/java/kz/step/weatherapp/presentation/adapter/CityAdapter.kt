@@ -18,21 +18,25 @@ import kz.step.weatherapp.R
 import kz.step.weatherapp.data.City
 import kz.step.weatherapp.data.CityInWeatherList
 import kz.step.weatherapp.data.CityWeather
+import kz.step.weatherapp.di.component.DaggerUseCaseComponent
+import kz.step.weatherapp.di.module.UseCaseModule
 import kz.step.weatherapp.domain.usecase.CityWeatherUseCase
 import kz.step.weatherapp.presentation.activity.MainActivity
 import kz.step.weatherapp.presentation.presenter.CityFragmentPresenter
 import kz.step.weatherapp.presentation.viewholder.CityViewHolder
+import javax.inject.Inject
 
 class CityAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
     var context: Context
     var cities: ArrayList<City>
     var presenter: CityFragmentPresenter
-    var cityWeatherUseCase = CityWeatherUseCase() // TODO: dagger
+    @Inject lateinit var cityWeatherUseCase: CityWeatherUseCase
 
     constructor(context: Context, cities: ArrayList<City>, presenter: CityFragmentPresenter) {
         this.context = context
         this.cities = cities
         this.presenter = presenter
+        DaggerUseCaseComponent.builder().useCaseModule(UseCaseModule(context)).build().inject(this)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -49,7 +53,7 @@ class CityAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
             if((context as FragmentActivity).progressbar_fragment_add_city.visibility == View.INVISIBLE) {
                 (context as FragmentActivity).progressbar_fragment_add_city.visibility = View.VISIBLE
                 val observable =
-                    CityWeatherUseCase().initiateCreateObservableById(cities.get(position).apiCityId) // TODO: dagger
+                    cityWeatherUseCase.initiateCreateObservableById(cities.get(position).apiCityId)
                 var observer = observable.observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe({ response ->

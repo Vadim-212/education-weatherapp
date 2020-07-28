@@ -23,7 +23,7 @@
         android:id="@+id/textview_viewholder_city_weather_temperature_degree"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="°C"
+        android:text="@string/viewholder_city_weather_textview_temperature_degree"
         style="@style/viewholder_city_weather_text_style"
         app:layout_constraintStart_toEndOf="@id/textview_viewholder_city_weather_temperature"
         app:layout_constraintTop_toTopOf="parent"
@@ -44,7 +44,7 @@
         android:id="@+id/textview_viewholder_city_weather_comma"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=", "
+        android:text="@string/viewholder_city_weather_textview_comma"
         style="@style/viewholder_city_weather_text_style"
         app:layout_constraintStart_toEndOf="@+id/textview_viewholder_city_weather_city"
         app:layout_constraintTop_toTopOf="parent"
@@ -67,5 +67,6 @@
         android:src="@drawable/delete_cross_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:contentDescription="@string/viewholder_city_weather_imageview_delete_city_content" />
 </androidx.constraintlayout.widget.ConstraintLayout>
