@@ -45,10 +45,14 @@ class CityWeather {
     @Expose
     var dt: Long? = null
 
+    @SerializedName("id")
+    @Expose
+    var id: Long? = null
+
     override fun toString(): String {
         return "CityWeather(weather='$weather',main='$main'," +
                 "visibility='$visibility',wind='$wind',rain='$rain'," +
-                "clouds='$clouds',snow='$snow',dt='$dt',name='$name')"
+                "clouds='$clouds',snow='$snow',dt='$dt',name='$name',id='$id')"
     }
 
     inner class Clouds {

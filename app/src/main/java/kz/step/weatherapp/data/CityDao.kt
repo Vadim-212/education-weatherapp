@@ -21,6 +21,9 @@ interface CityDao {
     @Query("SELECT * FROM city WHERE name = :name")
     fun initiateGetCityByName(name: String): City
 
+    @Query("SELECT * FROM city WHERE name LIKE '%'||:query||'%'")
+    fun initiateGetCitiesByQuery(query: String): List<City>
+
     @Query("SELECT * FROM city WHERE name = :name AND country = :country")
     fun initiateGetCityByNameAndCountry(name: String, country: String): City
 

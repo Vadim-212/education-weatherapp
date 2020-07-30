@@ -51,6 +51,10 @@ class DatabaseUseCase {
         weatherAppDatabase.getCityDao().initiateDeleteCityByName(name)
     }
 
+    fun initiateGetCitiesByQuery(query: String): List<City> {
+        return weatherAppDatabase.getCityDao().initiateGetCitiesByQuery(query)
+    }
+
     fun initiateDeleteCityByNameAndCountry(name: String, country: String) {
         weatherAppDatabase.getCityDao().initiateDeleteCityByNameAndCountry(name,country)
     }

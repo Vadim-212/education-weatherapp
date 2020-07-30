@@ -30,6 +30,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 
 class WeatherFragment(var city: CityInWeatherList): Fragment() {
@@ -75,7 +76,7 @@ class WeatherFragment(var city: CityInWeatherList): Fragment() {
         if(currentCityLastWeather != null) {
             val updateDateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(currentCityLastWeather?.updateDt!!), ZoneId.systemDefault())
             val difference = Duration.between(LocalDateTime.now(), updateDateTime).toMinutes()
-            if(difference <= 60) {
+            if(difference <= 15) {
                 initiateViewsFromCityInWeatherList(currentCityLastWeather!!)
             } else {
                 initializeGetDataFromApi()
@@ -91,7 +92,7 @@ class WeatherFragment(var city: CityInWeatherList): Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun initializeGetDataFromApi() {
         // TODO: dagger
-        val observable = CityWeatherUseCase().initiateCreateObservableByQuery("${city.name},${city.country}")
+        val observable = CityWeatherUseCase().initiateCreateObservableById(city.cityId)
         var observer = observable.observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe({ response -> onResponse(response) }, { t -> onFailure(t) })
@@ -121,6 +122,9 @@ class WeatherFragment(var city: CityInWeatherList): Fragment() {
         imageview_fragment_weather_icon.setImageDrawable(Drawable.createFromStream(context?.assets?.open("${cityWeather.weather?.get(0)?.icon}.png"), null))
         textview_fragment_weather_temperature.setText(Math.round(cityWeather.main?.temp!!).toString() + " °C")
         textview_fragment_weather_description.setText(cityWeather.weather?.get(0)?.description)
+        textview_fragment_weather_pressure.setText(cityWeather.main?.pressure?.roundToInt().toString())
+        textview_fragment_weather_humidity.setText(cityWeather.main?.humidity?.roundToInt().toString())
+        textview_fragment_weather_wind.setText(cityWeather.wind?.speed?.roundToInt().toString())
 
         textview_fragment_weather_last_update.setText("Last update ${LocalDateTime.ofInstant(Instant.ofEpochSecond(cityWeather.dt!!), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm"))}")
     }
@@ -130,8 +134,11 @@ class WeatherFragment(var city: CityInWeatherList): Fragment() {
         progressbar_fragment_weather.visibility = View.INVISIBLE
         textview_fragment_weather_city.setText("${city.name}, ${city.country}")
         imageview_fragment_weather_icon.setImageDrawable(Drawable.createFromStream(context?.assets?.open("${cityInWeatherList.weatherIcon}.png"), null))
-        textview_fragment_weather_temperature.setText(Math.round(cityInWeatherList.mainTemp!!).toString() + " °C")
+        textview_fragment_weather_temperature.setText(cityInWeatherList.mainTemp!!.roundToInt().toString() + " °C")
         textview_fragment_weather_description.setText(cityInWeatherList.weatherDescription)
+        textview_fragment_weather_pressure.setText(cityInWeatherList.mainPressure?.roundToInt().toString())
+        textview_fragment_weather_humidity.setText(cityInWeatherList.mainHumidity?.roundToInt().toString())
+        textview_fragment_weather_wind.setText(cityInWeatherList.windSpeed?.roundToInt().toString())
 
         textview_fragment_weather_last_update.setText("Last update ${LocalDateTime.ofInstant(Instant.ofEpochSecond(cityInWeatherList.updateDt!!), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm"))}")
     }

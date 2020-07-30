@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:id="@+id/swiperefreshlayout_fragment_weather"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swiperefreshlayout_fragment_weather"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.fragment.WeatherFragment"
     android:background="@color/color_deep_sky_blue">
 
@@ -68,6 +69,100 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textview_fragment_weather_temperature"/>
+
+    <TextView
+        android:id="@+id/textview_fragment_weather_pressure_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_white"
+        android:layout_marginTop="10dp"
+        android:text="Pressure"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/textview_fragment_weather_humidity_title"
+        app:layout_constraintTop_toBottomOf="@+id/textview_fragment_weather_description"/>
+
+    <TextView
+        android:id="@+id/textview_fragment_weather_pressure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/color_white"
+        app:layout_constraintStart_toStartOf="@id/textview_fragment_weather_pressure_title"
+        app:layout_constraintTop_toBottomOf="@+id/textview_fragment_weather_pressure_title" />
+
+    <TextView
+        android:id="@+id/textview_fragment_weather_pressure_hpa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="3dp"
+        android:text="@string/fragment_weather_textview_pressure_hpa"
+        android:textColor="@color/color_white"
+        app:layout_constraintStart_toEndOf="@id/textview_fragment_weather_pressure"
+        app:layout_constraintTop_toBottomOf="@+id/textview_fragment_weather_pressure_title" />
+
+    <TextView
+        android:id="@+id/textview_fragment_weather_humidity_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_white"
+        android:layout_marginTop="10dp"
+        android:text="Humidity"
+        app:layout_constraintStart_toEndOf="@+id/textview_fragment_weather_pressure_title"
+        app:layout_constraintEnd_toStartOf="@+id/textview_fragment_weather_wind_title"
+        app:layout_constraintTop_toBottomOf="@+id/textview_fragment_weather_description"/>
+
+    <TextView
+        android:id="@+id/textview_fragment_weather_humidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_white"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="@id/textview_fragment_weather_humidity_title"
+        app:layout_constraintTop_toBottomOf="@+id/textview_fragment_weather_humidity_title"/>
+
+    <TextView
+        android:id="@+id/textview_fragment_weather_humidity_percent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_white"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="3dp"
+        android:text="@string/fragment_weather_textview_humidity_percent"
+        app:layout_constraintStart_toEndOf="@id/textview_fragment_weather_humidity"
+
+        app:layout_constraintTop_toBottomOf="@+id/textview_fragment_weather_humidity_title"/>
+
+    <TextView
+        android:id="@+id/textview_fragment_weather_wind_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_white"
+        android:layout_marginTop="10dp"
+        android:text="Wind"
+        app:layout_constraintStart_toEndOf="@+id/textview_fragment_weather_humidity_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textview_fragment_weather_description"/>
+
+    <TextView
+        android:id="@+id/textview_fragment_weather_wind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_white"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="@id/textview_fragment_weather_wind_title"
+        app:layout_constraintTop_toBottomOf="@+id/textview_fragment_weather_wind_title"/>
+
+    <TextView
+        android:id="@+id/textview_fragment_weather_wind_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_white"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="3dp"
+        android:text="@string/fragment_weather_textview_wind_speed"
+        app:layout_constraintStart_toEndOf="@id/textview_fragment_weather_wind"
+        app:layout_constraintTop_toBottomOf="@+id/textview_fragment_weather_wind_title"/>
 
     <TextView
         android:id="@+id/textview_fragment_weather_last_update"

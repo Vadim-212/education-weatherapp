@@ -54,7 +54,6 @@ class MainActivity : AppCompatActivity(), MainActivityContract.View {
         presenter?.initializeData()
         initializeAdapter()
         initializeListeners()
-        Log.d("sadfsagfqwe", this.cities.size.toString())
     }
 
     override fun initializePresenter() {

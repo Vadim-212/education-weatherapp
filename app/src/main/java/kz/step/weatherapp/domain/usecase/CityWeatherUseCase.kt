@@ -1,6 +1,7 @@
 package kz.step.weatherapp.domain.usecase
 
 import io.reactivex.Observable
+import kz.step.weatherapp.data.City
 import kz.step.weatherapp.data.CityInWeatherList
 import kz.step.weatherapp.data.CityWeather
 import kz.step.weatherapp.domain.base.BaseNetworkUseCase
@@ -27,7 +28,7 @@ class CityWeatherUseCase: BaseNetworkUseCase<CityWeather> {
         cityInWeatherList.apply {
                 name = city.name!!
                 country = city.sys?.country!!
-                cityId = city.sys?.id!!
+                cityId = city.id!!
                 weatherDescription = city.weather?.get(0)?.description
                 weatherIcon = city.weather?.get(0)?.icon
                 mainTemp = city.main?.temp
